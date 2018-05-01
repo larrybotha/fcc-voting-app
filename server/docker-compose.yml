@@ -1,0 +1,61 @@
+version: "3.1"
+
+services:
+  node:
+    container_name: voting_app
+    build:
+      # use the current folder for the build context and Dockerfile
+      context: .
+      # override the environment variable in the Dockerfile
+      args:
+        - NODE_ENV=development
+    # override the command that runs in the Dockerfile, allowing us to use nodemon
+    # to restart the server if there are changes.
+    # We need to explicitly define the IP and port we want the inspector to run on.
+    # Without specifying ip and port the container runs the inspector at
+    # 127.0.0.1:9229
+    # According to this SO answer: https://stackoverflow.com/a/20778887/895007
+    # 127.0.0.1 is a "fake" network adapter used to reference a machine from within
+    # itself - anything listening to requests at that IP will only receive requests
+    # from the same machine
+    # 0.0.0.0 indicates that all connections should be listened to, whether local
+    # to a machine, or external
+    # 0.0.0.0 can be read as "all interfaces", while 127.0.0.1 can be read as "local
+    # interfaces"
+    command: ../node_modules/.bin/nodemon --inspect=0.0.0.0:9229
+    # map the host's 3000 to 3000 inside the container, and do the same for the
+    # debugging port
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      # indicate that the container's files are authoritative, and that the host
+      # is mapped to the container.
+      # This is what allows changes to files on the host to trigger a server
+      # restart with nodemon
+      - .:/usr/app:delegated
+      # this is a workaround to prevent host node_modules from accidently getting mounted in container
+      # in case you want to use node/npm both outside container for test/lint etc. and also inside container
+      # this will overwrite the default node_modules dir in container so it won't conflict with our
+      # /usr/node_modules location. Thanks to PR from @brnluiz
+      # - notused:/usr/app/node_modules
+    # link the app container to the mongo container so that the app can make
+    # db connections
+    environment:
+      - NODE_ENV=development
+    links:
+      - mongo
+
+  mongo:
+    container_name: voting_mongo
+    image: mongo
+    # map the host's data directory to the directory inside the container defined
+    # by the Dockerfile for the official mongo image
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  # we need to define a 'notused' volume here because it's referenced in our node service...?
+  notused:
