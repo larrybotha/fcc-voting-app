@@ -38,7 +38,7 @@ services:
       # in case you want to use node/npm both outside container for test/lint etc. and also inside container
       # this will overwrite the default node_modules dir in container so it won't conflict with our
       # /usr/node_modules location. Thanks to PR from @brnluiz
-      # - notused:/usr/app/node_modules
+      - notused:/usr/src/node_modules
     # link the app container to the mongo container so that the app can make
     # db connections
     environment:
