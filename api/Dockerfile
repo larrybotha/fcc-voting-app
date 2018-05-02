@@ -33,7 +33,8 @@ RUN npm install && npm cache clean --force
 ENV PATH /usr/node_modules/.bin:$PATH
 
 # copy everything from the host to the container
-COPY src /usr/app
+WORKDIR /usr/app
+COPY . /usr/app
 
 # don't use npm to start the app... just use node
 CMD ["node", "index.js"]

@@ -22,8 +22,8 @@ services:
     # to a machine, or external
     # 0.0.0.0 can be read as "all interfaces", while 127.0.0.1 can be read as "local
     # interfaces"
-    command: ../node_modules/.bin/nodemon --inspect=0.0.0.0:9229
-    # map the host's 3000 to 3000 inside the container, and do the same for the
+    command: ./node_modules/.bin/nodemon --inspect=0.0.0.0:9229
+    # map the host's 3030 to 3030 inside the container, and do the same for the
     # debugging port
     ports:
       - "3030:3030"
