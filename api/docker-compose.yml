@@ -1,8 +1,8 @@
 version: "3.1"
 
 services:
-  node:
-    container_name: voting_app
+  voting_app:
+    container_name: my_voting_app_name
     build:
       # use the current folder for the build context and Dockerfile
       context: .
@@ -44,10 +44,10 @@ services:
     environment:
       - NODE_ENV=development
     links:
-      - mongo
+      - voting_db
 
-  mongo:
-    container_name: voting_mongo
+  voting_db:
+    container_name: my_voting_db_name
     image: mongo
     # map the host's data directory to the directory inside the container defined
     # by the Dockerfile for the official mongo image
