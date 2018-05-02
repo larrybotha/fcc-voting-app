@@ -12,8 +12,8 @@ RUN mkdir -p /usr/app
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
 
-# set default to port 3000
-ARG PORT=3000
+# set default to port 3030
+ARG PORT=3030
 ENV PORT $PORT
 # expose app port, and debug port
 EXPOSE $PORT 9229
