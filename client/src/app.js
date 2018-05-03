@@ -10,4 +10,8 @@ app.get('/', (req, res) => {
   res.render('index', {title: 'Hello'});
 });
 
+app.get('/login', (req, res) => {
+  res.render('login', {title: 'Login'});
+});
+
 module.exports = app;
