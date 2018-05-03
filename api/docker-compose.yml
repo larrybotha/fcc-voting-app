@@ -4,8 +4,8 @@ version: "3.1"
 # https://developer.okta.com/blog/2017/10/11/developers-guide-to-docker-part-3
 
 services:
-  voting_app:
-    container_name: my_voting_app_name
+  api:
+    container_name: voting_app_api
     build:
       # use the current folder for the build context and Dockerfile
       context: .
@@ -49,8 +49,12 @@ services:
     links:
       - voting_db
 
-  voting_db:
-    container_name: my_voting_db_name
+  # to connect to this container via another container we use the service name
+  # e.g. mongodb://mongo:27017/votingdb
+  # if the name of the service was my_mongo_service then we'd use
+  # mongodb://my_mongo_service:27017/votingdb
+  mongo:
+    container_name: voting_app_db
     image: mongo
     # map the host's data directory to the directory inside the container defined
     # by the Dockerfile for the official mongo image
