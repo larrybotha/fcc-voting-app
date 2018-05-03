@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index",
+    "dev": "nodemon --inspect src/index",
+    "watch": "browser-sync start --proxy 'localhost:3000' --files 'src/*'"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +15,8 @@
   "dependencies": {
     "express": "^4.16.3",
     "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.24.2"
   }
 }
