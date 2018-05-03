@@ -1,7 +1,7 @@
-version: "3.1"
 # resources:
 # https://sloppy.io/from-dev-to-prod-with-nodejs-and-hackathon-starter-using-docker-compose-part-1/
 # https://developer.okta.com/blog/2017/10/11/developers-guide-to-docker-part-3
+version: "3.3"
 
 services:
   api:
