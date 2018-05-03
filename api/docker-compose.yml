@@ -42,12 +42,16 @@ services:
       # this will overwrite the default node_modules dir in container so it won't conflict with our
       # /usr/node_modules location. Thanks to PR from @brnluiz
       - notused:/usr/src/node_modules
-    # link the app container to the mongo container so that the app can make
-    # db connections
     environment:
       - NODE_ENV=development
-    links:
-      - voting_db
+    # indicate that the mongo service needs to be started before this service
+    depends_on:
+      - mongo
+    # connect this service to a network so that it can communicate with other
+    # services on the network. In this situation, we want the api to connect to
+    # the database
+    networks:
+      - votingnet
 
   # to connect to this container via another container we use the service name
   # e.g. mongodb://mongo:27017/votingdb
@@ -56,13 +60,33 @@ services:
   mongo:
     container_name: voting_app_db
     image: mongo
+    # reduce the size of the container by running mongo with --smallfiles
+    command: mongod --smallfiles
     # map the host's data directory to the directory inside the container defined
     # by the Dockerfile for the official mongo image
     volumes:
       - ./data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      # make this service part of the votingnet network
+      # - votingnet
+      # if we want to provide a different name for the container in our connection
+      # string to mongo we can define an alias
+      votingnet:
+        aliases:
+          - "votingdbnet"
 
 volumes:
   # we need to define a 'notused' volume here because it's referenced in our node service...?
   notused:
+
+# links are deprecated in Docker, so we need to use a network to connect containers
+# We can see networks using
+# $ docker network list
+# and inspect this network using
+# $ docker inspect api_votingnet
+networks:
+  # create a network called votingnet, and use the bridge driver
+  votingnet:
+    driver: bridge
