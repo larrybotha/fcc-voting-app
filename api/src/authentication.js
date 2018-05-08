@@ -6,6 +6,7 @@ module.exports = function(app) {
   const config = app.get('authentication');
 
   // Set up authentication with the secret
+  console.log(config);
   app.configure(authentication(config));
   app.configure(jwt());
   app.configure(local());
