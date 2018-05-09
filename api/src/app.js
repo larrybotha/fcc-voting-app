@@ -20,8 +20,11 @@ const authentication = require('./authentication');
 const mongoose = require('./mongoose');
 
 const app = express(feathers());
-//
+
 // Set up Plugins and providers
+// These need to come before other configurations otherwise
+// the request object doesn't hvae our fethers app, and
+// authentication then throws errors
 app.configure(express.rest());
 app.configure(socketio());
 
