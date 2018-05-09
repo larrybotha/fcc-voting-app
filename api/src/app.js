@@ -20,6 +20,10 @@ const authentication = require('./authentication');
 const mongoose = require('./mongoose');
 
 const app = express(feathers());
+//
+// Set up Plugins and providers
+app.configure(express.rest());
+app.configure(socketio());
 
 // Load app configuration
 app.configure(configuration());
@@ -34,10 +38,6 @@ app.configure(authentication);
 // Host the public folder
 app.use('/', express.static(app.get('public')));
 app.configure(mongoose);
-
-// Set up Plugins and providers
-app.configure(express.rest());
-app.configure(socketio());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
