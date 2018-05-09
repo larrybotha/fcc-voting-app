@@ -22,33 +22,34 @@ const mongoose = require('./mongoose');
 const app = express(feathers());
 
 // Load app configuration
-app
-  .configure(configuration())
-  // Enable CORS, security, compression, body parsing
-  .use(cors())
-  .use(helmet())
-  .use(compress())
-  .use(express.json())
-  .use(express.urlencoded({extended: true}))
-  .configure(authentication)
+app.configure(configuration());
+// Enable CORS, security, compression, favicon and body parsing
+app.use(cors());
+app.use(helmet());
+app.use(compress());
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.configure(authentication);
+// app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+// Host the public folder
+app.use('/', express.static(app.get('public')));
+app.configure(mongoose);
 
-  .configure(mongoose)
+// Set up Plugins and providers
+app.configure(express.rest());
+app.configure(socketio());
 
-  // Set up Plugins and providers
-  .configure(express.rest())
-  .configure(socketio())
+// Configure other middleware (see `middleware/index.js`)
+app.configure(middleware);
+// Set up our services (see `services/index.js`)
+app.configure(services);
+// Set up event channels (see channels.js)
+app.configure(channels);
 
-  // Configure other middleware (see `middleware/index.js`)
-  .configure(middleware)
-  // Set up our services (see `services/index.js`)
-  .configure(services)
-  // Set up event channels (see channels.js)
-  .configure(channels)
+// Configure a middleware for 404s and the error handler
+app.use(express.notFound());
+app.use(express.errorHandler({logger}));
 
-  // Configure a middleware for 404s and the error handler
-  .use(express.notFound())
-  .use(express.errorHandler({logger}))
-
-  .hooks(appHooks);
+app.hooks(appHooks);
 
 module.exports = app;
