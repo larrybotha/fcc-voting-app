@@ -6,17 +6,22 @@ import Home from './routes/Home';
 import Login from './routes/Login';
 import Votes from './routes/votes';
 
+import Menu from './Menu';
+
 import routes from '../routes';
 
 class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <Switch>
-          <Route exact path={routes.home} component={Home} />
-          <Route exact path={routes.login} component={Login} />
-          <Route path={routes.votes} component={Votes} />
-        </Switch>
+        <div>
+          <Menu />
+          <Switch>
+            <Route exact path={routes.home} component={Home} />
+            <Route exact path={routes.login} component={Login} />
+            <Route path={routes.votes} component={Votes} />
+          </Switch>
+        </div>
       </BrowserRouter>
     );
   }
