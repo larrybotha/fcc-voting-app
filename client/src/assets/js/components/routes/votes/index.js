@@ -9,9 +9,9 @@ import routes from '../../../routes';
 
 const VotesPage = () => (
   <Switch>
-    <Route exact path="/" component={List} />
-    <Route exact path={routes.Item} component={Item} />
-    <Route exact path={routes.New} component={New} />
+    <Route exact path={routes.votes} component={List} />
+    <Route path={routes.votesNew} component={New} />
+    <Route path={routes.votesItem} component={Item} />
   </Switch>
 );
 
