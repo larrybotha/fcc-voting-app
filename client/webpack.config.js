@@ -11,6 +11,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[hash].js',
+    // required for historyFl=allback to work for requests at subpaths of /
+    publicPath: '/',
   },
 
   module: {
@@ -41,6 +43,8 @@ module.exports = {
   ],
 
   devServer: {
+    // required for historyFl=allback to work for requests at subpaths of /
+    historyApiFallback: true,
     // don't reload if HMR fails. hot: true will reload if HMR fails
     // useful for configuring client
     hotOnly: true,
