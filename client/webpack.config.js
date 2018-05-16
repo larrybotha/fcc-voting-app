@@ -42,6 +42,8 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
   ],
 
+  devtool: 'cheap-module-eval-source-map',
+
   devServer: {
     // required for historyFl=allback to work for requests at subpaths of /
     historyApiFallback: true,
