@@ -27,15 +27,16 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
+        <>
           <Menu />
+
           <Switch>
             <Route exact path={routes.home} component={Home} />
             <Route exact path={routes.login} component={Login} />
             <Route exact path={routes.signup} component={Signup} />
             <Route path={routes.votes} component={Votes} />
           </Switch>
-        </div>
+        </>
       </BrowserRouter>
     );
   }
