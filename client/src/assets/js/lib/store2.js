@@ -60,8 +60,16 @@ const createCounter$ = action$ =>
       .map(_ => _ => initialCounterState)
   );
 
+const createAlert$ = action$ =>
+  xs.merge(
+    action$.filter(({type}) => type === 'increment').map(action => state => {
+      console.log('incremented');
+    })
+  );
+
 const streamCreators = {
   counter: createCounter$,
+  alert: createAlert$,
 };
 
 const {dispatch, state$} = createStore(streamCreators);
