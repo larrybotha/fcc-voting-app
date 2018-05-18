@@ -1,4 +1,5 @@
 import xs from 'xstream';
+import dropRepeats from 'xstream/extra/dropRepeats';
 
 function createStore(streamCreators) {
   let dispatch;
@@ -68,6 +69,7 @@ dispatch({type: 'increment', value: 1}); // No subscribers yet
 
 state$
   .map(({counter}) => counter)
+  .compose(dropRepeats())
   .filter(x => x !== undefined)
   .subscribe({
     next(results) {
