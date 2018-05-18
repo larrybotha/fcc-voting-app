@@ -47,14 +47,14 @@ const counterActions = {
   reset: 'reset',
 };
 
-const initialCounterState = 0;
+const initialCounterState = {count: 0};
 
 const createCounter$ = action$ =>
   xs.merge(
     xs.of(() => initialCounterState),
     action$
       .filter(({type}) => type === 'increment')
-      .map(action => state => action.value + state),
+      .map(action => state => ({...state, count: action.count + state.count})),
     action$
       .filter(({type}) => type === 'reset')
       .map(_ => _ => initialCounterState)
@@ -66,7 +66,7 @@ const streamCreators = {
 
 const {dispatch, state$} = createStore(streamCreators);
 
-dispatch({type: 'increment', value: 1}); // No subscribers yet
+dispatch({type: 'increment', count: 1}); // No subscribers yet
 
 state$
   .map(({counter}) => counter)
@@ -78,8 +78,8 @@ state$
     },
   });
 
-dispatch({type: 'increment', value: 2});
-dispatch({type: 'increment', value: 1});
+dispatch({type: 'increment', count: 2});
+dispatch({type: 'increment', count: 1});
 dispatch({type: 'reset'});
 
 export {createStore};
