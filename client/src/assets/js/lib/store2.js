@@ -76,6 +76,9 @@ state$
     next(results) {
       console.log(results);
     },
+    error(e) {
+      console.error(e);
+    },
   });
 
 dispatch({type: 'increment', count: 2});
