@@ -1,23 +1,6 @@
 import xs from 'xstream';
 
-function createState(reducer$, initialState = {}) {
-  let dispatch;
-  // create an action stream with a producer
-  // We assign 'dispatch' to the broadcast so that we can broadcast events
-  const action$ = xs.create({
-    start(listener) {
-      dispatch = action => {
-        // broadcast the action to all listeners on the action$
-        return listener.next(action);
-      };
-    },
-    stop() {},
-  });
-
-  // create a stream of reducers by taking a map of reducers, and then
-  // filtering action$ for each reducer stream so that it only receives
-  // events from the actions it is associated with
-
+function createState(reducer$) {
   const state$ = reducer$.fold((state, [scope, reducer]) => {
     return {
       ...state,
@@ -25,25 +8,40 @@ function createState(reducer$, initialState = {}) {
       // scope to the reducer at that scope
       [scope]: reducer(state[scope]),
     };
-  }, initialState);
+  }, {});
 
-  return {state$, dispatch};
+  return {state$};
 }
 
-const add$ = xs.create();
-const counterReducer$ = add$.map(payload => state => state + payload);
-const rootReducer$ = counterReducer$.map(counter => ['counter', counter]);
-const {dispatch, state$} = createState(rootReducer$, {counter: 10});
+const counterActions = {
+  increment: xs.create(),
+  decrement: xs.create(),
+  reset: xs.create(),
+};
 
-add$.shamefullySendNext(1); // No subscribers yet
+const initialCounterState = 0;
+
+const counterReducer$ = xs.merge(
+  xs.of(() => initialCounterState),
+  counterActions.increment.map(payload => state => payload + state),
+  counterActions.decrement.map(payload => state => payload - state),
+  counterActions.reset.map(_ => _ => initialCounterState)
+);
+const rootReducer$ = xs.merge(
+  counterReducer$.map(counter => ['counter', counter])
+);
+const {dispatch, state$} = createState(rootReducer$);
+
+counterActions.increment.shamefullySendNext(1); // No subscribers yet
 
 state$.addListener({
   next(results) {
-    console.log(results);
+    // console.log(results);
   },
 });
 
-add$.shamefullySendNext(2);
-add$.shamefullySendComplete();
+counterActions.increment.shamefullySendNext(2);
+counterActions.increment.shamefullySendNext(1);
+counterActions.reset.shamefullySendNext();
 
 export {createState};
