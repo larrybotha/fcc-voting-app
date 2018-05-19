@@ -2,11 +2,17 @@ import React from 'react';
 import {render} from 'react-dom';
 
 import App from './components/App';
+import Provider from './components/stream';
 
 import './lib/store';
-import './lib/store2';
+import {store} from './lib/store2';
 
-render(<App />, document.querySelector('.js-mount'));
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.querySelector('.js-mount')
+);
 
 if (module.hot) {
   module.hot.accept();
