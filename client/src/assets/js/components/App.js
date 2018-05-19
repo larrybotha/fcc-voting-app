@@ -7,6 +7,8 @@ import Login from './routes/Login';
 import Signup from './routes/Signup';
 import Votes from './routes/votes';
 
+import {connect} from './stream';
+
 import Menu from './Menu';
 
 import routes from '../routes';
@@ -25,9 +27,14 @@ class App extends React.Component {
   }
 
   render() {
+    const {count, dispatch, decrement, increment} = this.props;
+
     return (
       <BrowserRouter>
         <>
+          <button onClick={() => dispatch(decrement)}>-</button>
+          {count}
+          <button onClick={() => dispatch(increment)}>+</button>
           <Menu />
 
           <Switch>
@@ -42,4 +49,9 @@ class App extends React.Component {
   }
 }
 
-export default hot(module)(App);
+const connectedApp = connect(({counter}) => ({count: counter.count}), {
+  increment: {type: 'increment', value: 1},
+  decrement: {type: 'decrement', value: 1},
+})(App);
+
+export default hot(module)(connectedApp);
