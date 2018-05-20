@@ -5,7 +5,7 @@ import App from './components/App';
 import Provider from './components/stream';
 
 import './lib/store';
-import {store} from './lib/store2';
+import store from './store';
 
 render(
   <Provider store={store}>
