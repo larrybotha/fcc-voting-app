@@ -8,6 +8,7 @@ import Signup from './routes/Signup';
 import Votes from './routes/votes';
 
 import {connect} from './stream';
+import {increment, decrement} from '../actions/counter';
 
 import Menu from './Menu';
 
@@ -27,14 +28,16 @@ class App extends React.Component {
   }
 
   render() {
-    const {count, dispatch, decrement, increment} = this.props;
+    const {counter, dispatch, decrement, increment, request} = this.props;
 
     return (
       <BrowserRouter>
         <>
           <button onClick={() => dispatch(decrement)}>-</button>
-          {count}
+          {counter ? counter.count : 0}
           <button onClick={() => dispatch(increment)}>+</button>
+
+          <button onClick={() => dispatch(request)}>request</button>
           <Menu />
 
           <Switch>
@@ -49,9 +52,18 @@ class App extends React.Component {
   }
 }
 
-const connectedApp = connect(({counter}) => ({count: counter.count}), {
-  increment: {type: 'increment', value: 1},
-  decrement: {type: 'decrement', value: 1},
+const mapStateToProps = state => {
+  const {counter} = state;
+
+  return {
+    count: counter.count,
+  };
+};
+
+const connectedApp = connect(mapStateToProps, {
+  increment: increment(1),
+  decrement: decrement(1),
+  request: {type: 'request'},
 })(App);
 
 export default hot(module)(connectedApp);
