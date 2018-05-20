@@ -41,28 +41,6 @@ function createStore(streamCreators) {
   return {dispatch, state$};
 }
 
-const counterActions = {
-  increment: 'increment',
-  decrement: 'decrement',
-  reset: 'reset',
-};
-
-const initialCounterState = {count: 0};
-
-const createCounter$ = action$ =>
-  xs.merge(
-    xs.of(() => initialCounterState),
-    action$
-      .filter(({type}) => type === 'increment')
-      .map(action => state => ({...state, count: state.count + action.value})),
-    action$
-      .filter(({type}) => type === 'decrement')
-      .map(action => state => ({...state, count: state.count - action.value})),
-    action$
-      .filter(({type}) => type === 'reset')
-      .map(_ => _ => initialCounterState)
-  );
-
 const createAlert$ = action$ =>
   xs.merge(
     action$.filter(({type}) => type === 'increment').map(action => state => {
@@ -70,31 +48,4 @@ const createAlert$ = action$ =>
     })
   );
 
-const streamCreators = {
-  counter: createCounter$,
-  alert: createAlert$,
-};
-
-const store = createStore(streamCreators);
-const {dispatch, state$} = store;
-
-dispatch({type: 'increment', value: 1}); // No subscribers yet
-
-state$
-  .map(({counter}) => counter)
-  .compose(dropRepeats())
-  .filter(x => x !== undefined)
-  .subscribe({
-    next(results) {
-      console.log(results);
-    },
-    error(e) {
-      console.error(e);
-    },
-  });
-
-dispatch({type: 'increment', value: 2});
-dispatch({type: 'increment', value: 1});
-dispatch({type: 'reset'});
-
-export {createStore, store};
+export {createStore};
