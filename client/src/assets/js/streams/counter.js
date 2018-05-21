@@ -4,7 +4,7 @@ import * as counterActions from '../actions/counter';
 
 const initialCounterState = {count: 0};
 
-const createCounter$ = action$ =>
+const createCounterState$ = action$ =>
   xs.merge(
     xs.of(() => initialCounterState),
     action$
@@ -24,4 +24,23 @@ const createCounter$ = action$ =>
       .map(_ => _ => initialCounterState)
   );
 
-export default createCounter$;
+const createLogEffect = (action$, dispatch) => {
+  const $ = action$.filter(({type}) => type === counterActions.INCREMENT);
+
+  $.addListener({
+    next() {
+      console.log('side effect');
+    },
+    error(e) {
+      console.log(e);
+    },
+  });
+};
+
+const createCounterEffect$ = (action$, dispatch) => {
+  const effects = [createLogEffect];
+
+  effects.map(effect => effect(action$, dispatch));
+};
+
+export {createCounterState$, createCounterEffect$};

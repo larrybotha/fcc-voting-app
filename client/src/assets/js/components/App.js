@@ -36,7 +36,6 @@ class App extends React.Component {
           <button onClick={() => dispatch(decrement)}>-</button>
           {count}
           <button onClick={() => dispatch(increment)}>+</button>
-
           <button onClick={() => dispatch(request)}>request</button>
           <Menu />
 

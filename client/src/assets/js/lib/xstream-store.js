@@ -1,6 +1,6 @@
 import xs from 'xstream';
 
-function createStore(streamCreators) {
+function createStore(stateStreamCreators = {}, effectCreators = []) {
   let dispatch;
 
   // create an action stream with a producer
@@ -15,16 +15,12 @@ function createStore(streamCreators) {
     stop() {},
   });
 
-  // intialise dispatch by creating a subscription
-  // unsubscribe because we no longer need the subscription
-  action$.subscribe({next() {}}).unsubscribe();
-
   // create a stream of reducers by taking a map of reducers, and then
   // filtering action$ for each reducer stream so that it only receives
   // events from the actions it is associated with
   const reducer$ = xs.merge(
-    ...Object.keys(streamCreators).map(scope =>
-      streamCreators[scope](action$).map(stream => [scope, stream])
+    ...Object.keys(stateStreamCreators).map(scope =>
+      stateStreamCreators[scope](action$).map(stream => [scope, stream])
     )
   );
 
@@ -37,12 +33,16 @@ function createStore(streamCreators) {
     };
   }, {});
 
+  // intialise dispatch by creating a subscription
+  // unsubscribe because we no longer need the subscription
+  xs
+    .merge(action$, state$)
+    .subscribe({next() {}})
+    .unsubscribe();
+
+  effectCreators.map(effect => effect(action$, dispatch));
+
   return {dispatch, state$};
 }
-
-const createAlert$ = action$ =>
-  action$.filter(({type}) => type === 'increment').map(action => state => {
-    console.log('side effect', action);
-  });
 
 export default createStore;
