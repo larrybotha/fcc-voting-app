@@ -5,24 +5,25 @@ import * as counterActions from '../actions/counter';
 const initialCounterState = {count: 0};
 
 const createCounterState$ = action$ =>
-  xs.merge(
-    xs.of(() => initialCounterState),
-    action$
-      .filter(({type}) => type === counterActions.INCREMENT)
-      .map(action => state => ({
-        ...state,
-        count: state.count + action.value,
-      })),
-    action$
-      .filter(({type}) => type === counterActions.DECREMENT)
-      .map(action => state => ({
-        ...state,
-        count: state.count - action.value,
-      })),
-    action$
-      .filter(({type}) => type === counterActions.RESET)
-      .map(_ => _ => initialCounterState)
-  );
+  xs
+    .merge(
+      action$
+        .filter(({type}) => type === counterActions.INCREMENT)
+        .map(action => state => ({
+          ...state,
+          count: state.count + action.value,
+        })),
+      action$
+        .filter(({type}) => type === counterActions.DECREMENT)
+        .map(action => state => ({
+          ...state,
+          count: state.count - action.value,
+        })),
+      action$
+        .filter(({type}) => type === counterActions.RESET)
+        .map(_ => _ => initialCounterState)
+    )
+    .startWith(() => initialCounterState);
 
 const createLogEffect = (action$, dispatch) => {
   const $ = action$.filter(({type}) => type === counterActions.INCREMENT);
