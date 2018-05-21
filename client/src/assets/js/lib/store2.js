@@ -16,10 +16,6 @@ function createStore(streamCreators) {
     stop() {},
   });
 
-  // intialise dispatch by creating a subscription
-  // unsubscribe because we no longer need the subscription
-  action$.subscribe({next() {}}).unsubscribe();
-
   // create a stream of reducers by taking a map of reducers, and then
   // filtering action$ for each reducer stream so that it only receives
   // events from the actions it is associated with
@@ -37,6 +33,11 @@ function createStore(streamCreators) {
       [scope]: reducer(state[scope]),
     };
   }, {});
+
+  // intialise dispatch by creating a subscription
+  // unsubscribe because we no longer need the subscription
+  action$.subscribe({next() {}}).unsubscribe();
+  state$.subscribe({next() {}}).unsubscribe();
 
   return {dispatch, state$};
 }
