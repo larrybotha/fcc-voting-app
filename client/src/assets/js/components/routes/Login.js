@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {createUser$} from '../../streams/users';
+import {createUser$} from '../../streams/user';
 
 class LoginPage extends Component {
   handleChange = e => {
