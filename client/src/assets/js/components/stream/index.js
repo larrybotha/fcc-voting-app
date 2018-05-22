@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const defaultSelector = state => state;
 
-const connect = (selector = defaultSelector, actions = {}) => {
+const connect = (selector, actions = {}) => {
   const wrapWithConnect = WrappedComponent => {
     return class Connect extends Component {
       static contextTypes = {
@@ -12,7 +12,7 @@ const connect = (selector = defaultSelector, actions = {}) => {
       };
 
       componentDidMount() {
-        const selected$ = this.context.state$.map(selector);
+        const selected$ = this.context.state$.map(selector || defaultSelector);
 
         this.subscription = selected$.subscribe({
           next: state => {
