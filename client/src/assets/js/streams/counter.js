@@ -4,29 +4,23 @@ import * as counterActions from '../actions/counter';
 
 const initialCounterState = {count: 0};
 
-const counterState$Creator = action$ =>
+const counterState$Creator = select =>
   xs
     .merge(
-      action$
-        .filter(({type}) => type === counterActions.INCREMENT)
-        .map(action => state => ({
-          ...state,
-          count: state.count + action.value,
-        })),
-      action$
-        .filter(({type}) => type === counterActions.DECREMENT)
-        .map(action => state => ({
-          ...state,
-          count: state.count - action.value,
-        })),
-      action$
-        .filter(({type}) => type === counterActions.RESET)
-        .map(_ => _ => initialCounterState)
+      select(counterActions.INCREMENT).map(action => state => ({
+        ...state,
+        count: state.count + action.value,
+      })),
+      select(counterActions.DECREMENT).map(action => state => ({
+        ...state,
+        count: state.count - action.value,
+      })),
+      select(counterActions.RESET).map(_ => _ => initialCounterState)
     )
     .startWith(() => initialCounterState);
 
-const createLogEffect = (action$, dispatch) => {
-  const $ = action$.filter(({type}) => type === counterActions.INCREMENT);
+const createLogEffect = (select, dispatch) => {
+  const $ = select(counterActions.INCREMENT);
 
   $.addListener({
     next() {
@@ -38,10 +32,10 @@ const createLogEffect = (action$, dispatch) => {
   });
 };
 
-const counterEffectsCreator = (action$, dispatch) => {
+const counterEffectsCreator = (select, dispatch) => {
   const effects = [createLogEffect];
 
-  effects.map(effect => effect(action$, dispatch));
+  effects.map(effect => effect(select, dispatch));
 };
 
 export {counterState$Creator, counterEffectsCreator};
