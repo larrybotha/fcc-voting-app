@@ -1,33 +1,32 @@
 import React, {Component} from 'react';
 
-import {createUser$} from '../../streams/users';
+import {connect} from '../stream';
+import {createUser} from '../../actions/user';
 
 class SignupPage extends Component {
+  state = {email: '', password: ''};
+
+  constructor(props) {
+    super(props);
+  }
+
   handleChange = e => {
     this.setState({[e.target.name]: e.target.value});
   };
 
   handleSubmit = e => {
+    const {dispatch, createUser} = this.props;
     const {email, password} = this.state;
     e.preventDefault();
 
-    const user$ = createUser$({email, password});
-
-    user$.addListener({
-      next(e) {
-        console.log(e);
-      },
-      error(e) {
-        console.error(e);
-      },
-    });
+    dispatch(createUser({email, password}));
   };
 
   render() {
     return (
       <div>
         <h1>Signup</h1>
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <div>
             <label>email</label>
             <div>
@@ -45,11 +44,17 @@ class SignupPage extends Component {
             </div>
           </div>
 
-          <button type="submit">submit</button>
+          <button onClick={this.handleSubmit} type="submit">
+            submit
+          </button>
         </form>
       </div>
     );
   }
 }
 
-export default SignupPage;
+const mapDispatchToProps = {
+  createUser,
+};
+
+export default connect(null, mapDispatchToProps)(SignupPage);
