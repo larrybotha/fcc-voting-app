@@ -18,15 +18,11 @@ export const loginFailure = error => ({
 });
 
 export const CREATE_USER_REQUEST = '@user/createUserRequest';
-export const createUser = ({email, password}) => {
-  console.log('here');
-
-  return {
-    type: CREATE_USER_REQUEST,
-    email,
-    password,
-  };
-};
+export const createUser = ({email, password}) => ({
+  type: CREATE_USER_REQUEST,
+  email,
+  password,
+});
 
 export const CREATE_USER_SUCCESS = '@user/createUserSuccess';
 export const createUserSuccess = user => ({
