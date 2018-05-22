@@ -4,7 +4,7 @@ import * as counterActions from '../actions/counter';
 
 const initialCounterState = {count: 0};
 
-const createCounterState$ = action$ =>
+const counterState$Creator = action$ =>
   xs
     .merge(
       action$
@@ -38,10 +38,10 @@ const createLogEffect = (action$, dispatch) => {
   });
 };
 
-const createCounterEffect$ = (action$, dispatch) => {
+const counterEffectsCreator = (action$, dispatch) => {
   const effects = [createLogEffect];
 
   effects.map(effect => effect(action$, dispatch));
 };
 
-export {createCounterState$, createCounterEffect$};
+export {counterState$Creator, counterEffectsCreator};

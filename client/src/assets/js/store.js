@@ -1,11 +1,13 @@
 import createStore from './lib/xstream-store';
-import {createCounterState$, createCounterEffect$} from './streams/counter';
+import {counterState$Creator, counterEffectsCreator} from './streams/counter';
+import {userState$Creator, userEffectsCreator} from './streams/user';
 
 const streamCreators = {
-  counter: createCounterState$,
+  counter: counterState$Creator,
+  user: userState$Creator,
 };
 
-const effectCreators = [createCounterEffect$];
+const effectCreators = [counterEffectsCreator, userEffectsCreator];
 
 const store = createStore(streamCreators, effectCreators);
 
