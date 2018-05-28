@@ -40,7 +40,7 @@ function createStore(stateStreamCreators = {}, effectCreators = []) {
     };
   }, {});
 
-  // intialise dispatch by creating a subscription
+  // intialise dispatch and state$ initial values by creating a subscription
   // unsubscribe because we no longer need the subscription
   xs
     .merge(action$, state$)
