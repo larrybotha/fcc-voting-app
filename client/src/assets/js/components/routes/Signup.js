@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import {connect} from '../stream';
 import {createUser} from '../../actions/user';
 
 class SignupPage extends Component {
@@ -53,8 +52,4 @@ class SignupPage extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  createUser,
-};
-
-export default connect(null, mapDispatchToProps)(SignupPage);
+export default SignupPage;
