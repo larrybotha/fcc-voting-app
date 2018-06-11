@@ -1,19 +1,25 @@
 import React from 'react';
 import {hot} from 'react-hot-loader';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import XstreamContext from 'react-xstream-store';
 
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Signup from './routes/Signup';
 import Votes from './routes/votes';
 
-import {connect} from './stream';
 import * as counterActions from '../actions/counter';
 
 import Menu from './Menu';
 
 import routes from '../routes';
 import {auth$} from '../streams/auth';
+
+const actions = {
+  increment: {type: counterActions.INCREMENT, value: 1},
+  decrement: {type: counterActions.DECREMENT, value: 1},
+  request: {type: 'request'},
+};
 
 class App extends React.Component {
   componentDidMount() {
@@ -33,10 +39,21 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <>
-          <button onClick={() => dispatch(decrement)}>-</button>
-          {count}
-          <button onClick={() => dispatch(increment)}>+</button>
-          <button onClick={() => dispatch(request)}>request</button>
+          <XstreamContext.Consumer actions={actions}>
+            {props => {
+              const {counter, dispatch, decrement, increment, request} = props;
+
+              return (
+                <div>
+                  <button onClick={() => dispatch(decrement)}>-</button>
+                  {counter.count}
+                  <button onClick={() => dispatch(increment)}>+</button>
+                  <button onClick={() => dispatch(request)}>request</button>
+                </div>
+              );
+            }}
+          </XstreamContext.Consumer>
+
           <Menu />
 
           <Switch>
@@ -59,10 +76,4 @@ const mapStateToProps = state => {
   };
 };
 
-const connectedApp = connect(mapStateToProps, {
-  increment: {type: counterActions.INCREMENT, value: 1},
-  decrement: {type: counterActions.DECREMENT, value: 1},
-  request: {type: 'request'},
-})(App);
-
-export default hot(module)(connectedApp);
+export default hot(module)(App);

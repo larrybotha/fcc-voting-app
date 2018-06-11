@@ -2,15 +2,14 @@ import React from 'react';
 import {render} from 'react-dom';
 
 import App from './components/App';
-import Provider from './components/stream';
+import XstreamContext from 'react-xstream-store';
 
-import './lib/store';
 import store from './store';
 
 render(
-  <Provider store={store}>
+  <XstreamContext.Provider value={store}>
     <App />
-  </Provider>,
+  </XstreamContext.Provider>,
   document.querySelector('.js-mount')
 );
 

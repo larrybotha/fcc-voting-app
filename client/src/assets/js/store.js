@@ -1,4 +1,5 @@
-import createStore from './lib/xstream-store';
+import createStore from 'xstream-store';
+
 import {counterState$Creator, counterEffectsCreator} from './streams/counter';
 import {userState$Creator, userEffectsCreator} from './streams/user';
 
