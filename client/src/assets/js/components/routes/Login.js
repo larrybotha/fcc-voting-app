@@ -26,7 +26,7 @@ class LoginPage extends Component {
   render() {
     return (
       <div>
-        <h1>Signup</h1>
+        <h1>Log in</h1>
         <form onSubmit={this.handleSubmit}>
           <div>
             <label>email</label>
